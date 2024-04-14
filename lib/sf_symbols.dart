@@ -26,7 +26,7 @@ class _SfSymbolState extends State<SfSymbol> {
   int? symbolTextureId;
   Size? symbolSize;
 
-  void init() async {
+  Future<void> init() async {
     symbolTextureId = await SfSymbolsPlatform.instance.init(
       name: widget.name,
       weight: widget.weight,
@@ -50,10 +50,12 @@ class _SfSymbolState extends State<SfSymbol> {
   @override
   void didUpdateWidget(covariant SfSymbol oldWidget) {
     if (oldWidget.name != widget.name || oldWidget.weight != widget.weight || oldWidget.color != widget.color || oldWidget.size != widget.size) {
-      if (symbolTextureId != null) {
-        SfSymbolsPlatform.instance.dispose(symbolTextureId!);
-      }
-      init();
+      final lastId = symbolTextureId;
+      init().then((_) {
+        if (symbolTextureId != null) {
+          SfSymbolsPlatform.instance.dispose(lastId!);
+        }
+      });
     }
     super.didUpdateWidget(oldWidget);
   }
