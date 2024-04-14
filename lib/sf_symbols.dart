@@ -23,17 +23,10 @@ class SfSymbol extends StatefulWidget {
 }
 
 class _SfSymbolState extends State<SfSymbol> {
-  @override
-  void initState() {
-    super.initState();
-    // initPlatformState();
-    initSymbol();
-  }
-
   int? symbolTextureId;
   Size? symbolSize;
 
-  initSymbol() async {
+  void init() async {
     symbolTextureId = await SfSymbolsPlatform.instance.init(
       name: widget.name,
       weight: widget.weight,
@@ -49,7 +42,24 @@ class _SfSymbolState extends State<SfSymbol> {
   }
 
   @override
-  dispose() {
+  void initState() {
+    super.initState();
+    init();
+  }
+
+  @override
+  void didUpdateWidget(covariant SfSymbol oldWidget) {
+    if (oldWidget.name != widget.name || oldWidget.weight != widget.weight || oldWidget.color != widget.color || oldWidget.size != widget.size) {
+      if (symbolTextureId != null) {
+        SfSymbolsPlatform.instance.dispose(symbolTextureId!);
+      }
+      init();
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
     if (symbolTextureId != null) {
       SfSymbolsPlatform.instance.dispose(symbolTextureId!);
     }
@@ -59,18 +69,10 @@ class _SfSymbolState extends State<SfSymbol> {
   @override
   Widget build(BuildContext context) {
     if (symbolTextureId != null && symbolSize != null) {
-      return LayoutBuilder(builder: (context, constraints) {
-        if (constraints.isSatisfiedBy(symbolSize!)) {
-          return SizedBox.fromSize(
-            size: symbolSize,
-            child: Texture(textureId: symbolTextureId!),
-          );
-        }
-        return AspectRatio(
-          aspectRatio: symbolSize!.aspectRatio,
-          child: Texture(textureId: symbolTextureId!),
-        );
-      });
+      return SizedBox.fromSize(
+        size: symbolSize,
+        child: Texture(textureId: symbolTextureId!),
+      );
     } else {
       return const SizedBox();
     }

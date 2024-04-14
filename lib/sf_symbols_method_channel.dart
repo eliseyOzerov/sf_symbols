@@ -18,8 +18,7 @@ class MethodChannelSfSymbols extends SfSymbolsPlatform {
     required Color color,
     required double size,
   }) async {
-    final hexColor =
-        color.value.toRadixString(16).padLeft(8, '0').toUpperCase();
+    final hexColor = color.value.toRadixString(16).padLeft(8, '0').toUpperCase();
 
     try {
       final result = await methodChannel.invokeMethod('init', {
