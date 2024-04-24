@@ -45,14 +45,7 @@ public class SfSymbolsPlugin: NSObject, FlutterPlugin {
             }
 
             Self.textureMap[id] = texture
-            result([idKey: id])
-
-        case "render":
-            guard let textureId = (call.arguments as? [String: Any])?[idKey] as? Int64 else {
-                result(FlutterError(code: "INVALID_ARGUMENT", message: "url is null or textureID is null", details: nil))
-                return
-            }
-            render(id: textureId)
+            result([idKey: id, "size": render(id: id)])
 
         case "dispose":
             guard let textureId = (call.arguments as? [String: Any])?[idKey] as? Int64 else {
@@ -67,12 +60,12 @@ public class SfSymbolsPlugin: NSObject, FlutterPlugin {
             result(FlutterMethodNotImplemented)
         }
 
-        func render(id: Int64) {
+        func render(id: Int64) -> [String: Double] {
             let cgSize = Self.textureMap[id]?.render()
             var size = [String: Double]()
             size["width"] = cgSize?.width ?? 0
             size["height"] = cgSize?.height ?? 0
-            result(size)
+            return size
         }
     }
 }

@@ -12,7 +12,7 @@ class MethodChannelSfSymbols extends SfSymbolsPlatform {
   static const idKey = "textureId";
 
   @override
-  Future<int?> init({
+  Future<(int, Size)?> init({
     required String name,
     required FontWeight weight,
     required Color color,
@@ -28,28 +28,12 @@ class MethodChannelSfSymbols extends SfSymbolsPlatform {
         'size': size,
       });
 
-      return result[idKey];
+      final textureId = result[idKey] as int;
+      final sizeRes = Size(result["size"]["width"] as double, result["size"]["height"] as double);
+
+      return (textureId, sizeRes);
     } catch (e) {
       if (kDebugMode) print('SfSymbols init: $e');
-      return null;
-    }
-  }
-
-  @override
-  Future<Size?> render(int textureId) async {
-    try {
-      final value = await methodChannel.invokeMapMethod('render', {
-        idKey: textureId,
-      });
-      final width = value?['width'] as num?;
-      final height = value?['height'] as num?;
-      if (width == null || height == null) return null;
-
-      final size = Size(width.toDouble(), height.toDouble());
-      if (size.isEmpty) return null;
-      return size;
-    } catch (e) {
-      if (kDebugMode) print('SfSymbols render: $e');
       return null;
     }
   }

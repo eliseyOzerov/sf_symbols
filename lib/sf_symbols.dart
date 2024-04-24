@@ -27,17 +27,18 @@ class _SfSymbolState extends State<SfSymbol> {
   Size? symbolSize;
 
   Future<void> init() async {
-    symbolTextureId = await SfSymbolsPlatform.instance.init(
+    final value = await SfSymbolsPlatform.instance.init(
       name: widget.name,
       weight: widget.weight,
       color: widget.color,
       size: widget.size,
     );
 
-    if (symbolTextureId != null) {
-      symbolSize = await SfSymbolsPlatform.instance.render(symbolTextureId!);
+    if (value != null) {
+      symbolTextureId = value.$1;
+      symbolSize = value.$2;
 
-      if (symbolSize != null && mounted) setState(() {});
+      if (mounted) setState(() {});
     }
   }
 

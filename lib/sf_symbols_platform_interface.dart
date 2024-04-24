@@ -25,7 +25,7 @@ abstract class SfSymbolsPlatform extends PlatformInterface {
     _instance = instance;
   }
 
-  Future<int?> init({
+  Future<(int, Size)?> init({
     required String name,
     required FontWeight weight,
     required Color color,
