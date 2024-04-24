@@ -76,7 +76,7 @@ class _SfSymbolState extends State<SfSymbol> {
         child: Texture(textureId: symbolTextureId!),
       );
     } else {
-      return SizedBox.fromSize(size: symbolSize);
+      return SizedBox.fromSize(size: Size.square(widget.size));
     }
   }
 }
